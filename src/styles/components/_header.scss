@@ -1,0 +1,43 @@
+.header {
+	z-index: 100;
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	height: var(--height-header);
+	width: 100%;
+
+	padding: 0 var(--gl-indent);
+
+	//=============demo===========
+	.header__in {
+		display: flex;
+		align-items: center;
+	}
+
+	nav {
+		flex: auto;
+
+		&:not(:last-child) {
+			margin-right: r(20);
+		}
+	}
+
+	ul {
+		display: flex;
+		justify-content: flex-end;
+		margin: 0 r(-30) r(-30) 0;
+	}
+
+	li {
+		padding: 0 r(30) r(30) 0;
+	}
+
+	//=============demo###========
+}
+
+.header__in {
+	max-width: $pageWidth;
+	width: 100%;
+	margin: 0 auto;
+}

@@ -1,0 +1,114 @@
+@mixin st_btn {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+
+	text-align: center;
+	white-space: nowrap;
+	font-family: $font_1;
+
+	cursor: pointer;
+	border: transparent;
+
+	&[type='submit'] {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+	}
+
+	&:hover,
+	&:focus {
+		text-decoration: none;
+	}
+}
+
+//color mixins:
+@mixin btn_style_green {
+	font-weight: 700;
+	color: var(--color-white);
+	background-color: var(--color-primary-100);
+	transition: background-color 0.3s ease;
+
+	@include st_btn;
+
+	&:hover {
+		background-color: var(--color-primary-130);
+	}
+}
+
+@mixin btn_style_red {
+	font-weight: 700;
+	color: var(--color-white);
+	background-color: var(--color-pink);
+	transition: background-color 0.3s ease;
+
+	@include st_btn;
+
+	&:hover {
+		background-color: var(--color-pink-130);
+	}
+}
+
+//size mixins:
+@mixin btn_size_small {
+	padding: 0 2rem;
+
+	height: 5rem;
+
+	line-height: 5rem;
+	font-size: 1.8rem;
+
+	border-radius: 0.8rem;
+}
+
+@mixin btn_size_normal {
+	padding: 0 2rem;
+
+	border-radius: 1.2rem;
+
+	@include bp($tablet, min) {
+		height: 6.7rem;
+		line-height: 6.7rem;
+		font-size: 2.4rem;
+	}
+
+	@include bp($tablet - 1) {
+		height: 5.4rem;
+		line-height: 5.4rem;
+		font-size: 1.8rem;
+	}
+}
+
+@mixin btn_size_normal_v2 {
+	padding: 0 2rem;
+	font-size: 1.8rem;
+	border-radius: 1.2rem;
+
+	@include bp($tablet, min) {
+		height: 5rem;
+		line-height: 5rem;
+	}
+
+	@include bp($tablet - 1) {
+		height: 5.4rem;
+		line-height: 5.4rem;
+
+	}
+}
+
+@mixin btn_size_big {
+	padding: 0 2rem;
+	border-radius: 1.2rem;
+
+	@include bp($tablet, min) {
+		height: 7.2rem;
+		line-height: 7.2rem;
+		font-size: 2.4rem;
+	}
+
+	@include bp($tablet - 1) {
+		height: 5.4rem;
+		line-height: 5.4rem;
+		font-size: 1.8rem;
+	}
+}

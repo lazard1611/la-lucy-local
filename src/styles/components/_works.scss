@@ -1,0 +1,77 @@
+.works {
+	padding-top: 8rem;
+	background-color: cadetblue;
+}
+
+.works__title_icon {
+	width: 6rem;
+	height: 6rem;
+	margin: 0 auto 4rem;
+
+	color: tomato;
+
+	//transition: transform 0.3s ease;
+	animation-name: sun_animation;
+	animation-duration: 0.6s;
+	animation-iteration-count: infinite;
+	overflow-x: auto;
+}
+
+@keyframes sun_animation {
+	0% {
+		transform: rotateZ(0deg);
+	}
+	40% {
+		transform: rotateZ(14deg);
+	}
+	60% {
+		transform: rotateZ(0deg);
+	}
+	100% {
+		transform: rotateZ(0deg);
+	}
+}
+
+.works__wrap {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 5rem;
+}
+
+.works__item {
+	position: relative;
+	border-radius: 1rem;
+}
+
+.works__pic {
+	width: 100%;
+	height: 25rem;
+	margin-bottom: 2rem;
+	background-color: tomato;
+}
+
+.works__text {
+	font-size: 2rem;
+	font-weight: 700;
+	text-align: center;
+}
+
+.works__decor {
+	z-index: 2;
+	position: absolute;
+	top: -6rem;
+
+	.works__item:nth-child(2) & {
+		width: 10rem;
+		height: 10rem;
+
+		left: -8rem;
+	}
+
+	.works__item:nth-child(3) & {
+		width: 12rem;
+		height: 8rem;
+
+		left: -10rem;
+	}
+}

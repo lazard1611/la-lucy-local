@@ -1,0 +1,53 @@
+@mixin h1 {
+	@include bp($tablet, min) {
+		font-size: r(107);
+	}
+
+	@include bp($tablet - 1) {
+		font-size: r(60);
+	}
+}
+
+@mixin h2 {
+	@include bp($tablet, min) {
+		font-size: r(63);
+	}
+
+	@include bp($tablet - 1) {
+		font-size: r(40);
+	}
+}
+
+@mixin h3 {
+	@include bp($tablet, min) {
+		font-size: r(31);
+		line-height: 1.32;
+	}
+
+	@include bp($tablet - 1) {
+		font-size: r(26);
+		line-height: 1.27;
+	}
+}
+
+@mixin h4 {
+	font-size: r(30);
+	line-height: 1.5;
+}
+
+@mixin h5 {
+	font-size: 1.4rem;
+}
+
+@mixin h6 {
+	font-size: 1rem;
+}
+
+@mixin text {
+	font-size: 0.8rem;
+}
+// offsets
+
+@mixin title_offset {
+	margin-bottom: r(20);
+}

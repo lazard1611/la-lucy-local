@@ -1,0 +1,141 @@
+:root {
+	@include bp($laptop, min) {
+		--gl-indent: 4rem;
+	}
+
+	@include bp($laptop - 1) {
+		--gl-indent: 2rem;
+	}
+
+}
+
+/* ===================================================== COMMON ==================================================== */
+
+html {
+	font-size: 10px;
+
+	@include bp($desktopXL, min) {
+		font-size: calc(100vw / 1920 * 10);
+		// font-size: 0.37vw;
+	}
+
+	@include bp($desktopXL - 1, $laptop) {
+		font-size: calc(100vw / 1920 * 10);
+	}
+
+	@include bp($mobile - 1) {
+		font-size: calc(100vw / 375 * 10);
+	}
+}
+
+body {
+	position: relative;
+	width: 100%;
+	font-family: var(--second-family);
+	font-weight: 400;
+	line-height: 1;
+
+	color: var(--color-black-1);
+	background-color: $bg-color;
+
+	-webkit-text-size-adjust: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+
+	&.body--open_menu_state {
+		overflow: hidden;
+	}
+}
+
+body,
+textarea,
+ul {
+	&::-webkit-scrollbar {
+		width: 10px;
+		background-color: $bg-color;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		// border-radius: 10px;
+		background-color: var(--color-primary-100);
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: $bg-color;
+	}
+}
+
+.preloader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: $bg-color;
+
+	opacity: 1;
+	transition: opacity 0.3s;
+
+	z-index: 1000;
+
+	.body--loaded & {
+		pointer-events: none;
+		opacity: 0;
+	}
+}
+
+.main {
+	flex: auto;
+	width: 100%;
+	overflow: hidden;
+
+	padding-top: var(--height-header);
+
+}
+
+.section {
+	position: relative;
+
+	@include bp($tablet, min) {
+		padding: 8rem var(--gl-indent);
+	}
+
+	@include bp($tablet - 1) {
+		padding: 3rem var(--gl-indent);
+	}
+}
+
+[class*="__container"] {
+	width: 100%;
+	max-width: $pageWidth;
+	margin: 0 auto;
+}
+
+.h2 {
+	font-family: var(--first-family);
+	font-weight: 700;
+
+	@include bp($tablet, min) {
+		font-size: 7.4rem;
+		line-height: 1.08;
+	}
+
+	@include bp($tablet - 1) {
+		font-size: 3.2rem;
+		line-height: 1.19;
+	}
+}
+
+.fancybox__container {
+	max-width: 100%
+}
+
+.fancybox__container .fancybox__backdrop {
+	opacity: .95;
+	background: #fff
+}
+

@@ -1,0 +1,39 @@
+@import './mixins/global-mixins';
+
+:root {
+	--color-white: #fff;
+	--color-white-2: #FFFBF8;;
+	--color-black: #000;
+	--color-black-1: #2B2A2A;
+	--color-black-2: #012C2B;
+	--color-pink: #E95C7F;
+	--color-pink-130: #da2955;
+	--color-pink-140: #FBDEE5;
+	--color-pink-150: #FFD1BF;
+	--color-misty-rose: #f8ded3;
+	--color-rose: #F8DED3;
+	--color-cheese-100: #F5B29C;	
+	--color-rose-2: #F0A58C;
+	--color-primary-100: #007774;
+	--color-primary-120: #02615f;
+	--color-primary-130: #015654;
+	--color-primary-60: #66ADAC;
+	--color-primary-harvest-gold-100: #D88C00;
+	--color-floral-white: #fef7f2;
+	--color-columbia-blue: #C9E3D4;
+	--color-yellow: #FFD600;
+	--color-skobeloff: #CCE4E3;
+	--color-green-1: #D5D4D4;	
+
+	--first-family: 'RocaOne', sans-serif;
+	--second-family: 'Comfortaa', sans-serif;
+
+	
+	@include bp($tabletPortrait, min) {
+        --height-header: 12.5rem;
+    }
+
+	@include bp($tabletPortrait - 1) {
+        --height-header: 8rem;
+    }
+}

@@ -1,0 +1,17 @@
+@include font_face('RocaOne-Rg', 'RocaOne', 400);
+@include font_face('RocaOne-Bold', 'RocaOne', 700);
+@include font_face('RocaOne-Hv', 'RocaOne', 900);
+
+@include font_face('Comfortaa-Light', 'Comfortaa', 300);
+@include font_face('Comfortaa-Regular', 'Comfortaa', 400);
+@include font_face('Comfortaa-Medium', 'Comfortaa', 500);
+@include font_face('Comfortaa-SemiBold', 'Comfortaa', 600);
+@include font_face('Comfortaa-Bold', 'Comfortaa', 700);
+
+@font-face {
+	font-family: 'Cafedream';
+	src: url('../fonts/Cafedream.ttf');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}

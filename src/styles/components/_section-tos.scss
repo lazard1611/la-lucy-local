@@ -1,0 +1,85 @@
+.tos {}
+
+.tos__container {
+	position: relative;
+}
+
+.tos__title {
+	z-index: 1;
+	position: relative;
+	color: var(--color-pink);
+
+	&:not(:last-child) {
+		@include bp($tablet, min) {
+			margin-bottom: 8.6rem;
+		}
+
+		@include bp($tablet - 1) {
+			margin-bottom: 1.5rem;
+		}
+	}
+
+	@include bp($tablet, min) {
+		text-align: center;
+	}
+}
+
+.tos__content {
+	max-width: 95.4rem;
+	margin: 0 auto;
+	counter-reset: block;
+
+	font-weight: 700;
+	font-size: 1.8rem;
+	line-height: 1.56;
+
+	h1,h2,h3,h4,h5,h6 {
+		line-height: 1.33;
+
+		&::before {
+			counter-increment: block;
+			content: counter(block) ". ";
+		}
+
+		&:not(:last-child) {
+			margin-bottom: 0.6rem;
+		}
+	}
+
+	h3 {
+		font-size: 2.4rem;
+	}
+
+	p {
+		margin-bottom: 3rem;
+	}
+}
+
+.tos__decor {
+	position: absolute;
+	color: var(--color-misty-rose);
+
+	@include bp($laptop, min) {
+		top: -12.8rem;
+		left: -31.6rem;
+
+		width: 46.6rem;
+		height: 46.6rem;
+	}
+
+	@include bp($laptop - 1, $tablet) {
+		top: -17rem;
+		left: -15rem;
+
+		width: 25rem;
+		height: 25rem;
+	}
+
+	@include bp($tablet - 1) {
+		top: -8.4rem;
+		left: -8.6rem;
+
+		width: 12.8rem;
+		height: 12.8rem;
+	}
+}
