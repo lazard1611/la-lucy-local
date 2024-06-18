@@ -3,16 +3,18 @@ import '../index.html';
 import '../styles/app.scss';
 import { pageLoad } from './utils/utils';
 import marquee from './components/ticker-curve-svg';
-import marqueeAnimation from './components/ticker';
-import workAnim from './components/work-animation';
-import animateSvgDecor from './components/animate-svg-decor';
+import sectionTicker from './components/ticker';
+import sectionTickerMy from './components/ticker-my';
+import dropdownItem from './components/dropdown-item';
 
 pageLoad(() => {
     // tickerCurveSvg();
     // marquee();
-    // workAnim();
-    // marquee({classTicker: '.js-ticker-desktop'});
-    animateSvgDecor();
+    // sectionTicker();
+    sectionTickerMy();
+    dropdownItem();
+
+
     // let mm = gsap.matchMedia();
     // mm.add('(min-width: 768px)', () => {
     //     marquee({classTicker: '.js-ticker-desktop'});

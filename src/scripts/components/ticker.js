@@ -1,136 +1,59 @@
 import gsap from 'gsap';
-import Observer from 'gsap/Observer';
-import Draggable from 'gsap/dist/Draggable';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 
+const sectionTicker = () => {
+    gsap.registerEffect({
+        name: "ticker",
+        effect(targets, config) {
+            buildTickers({
+                targets: targets,
+                clone: config.clone || (el => {
+                    let clone = el.children[0].cloneNode(true);
+                    el.insertBefore(clone, el.children[0]);
+                    return clone;
+                })
+            });
 
-gsap.registerPlugin(ScrollTrigger, Observer, Draggable);
-
-export const marqueeAnimation = ({ trackSelector, slideSelector } = {}) => {
-    const $tracks = document.querySelectorAll(trackSelector);
-    if (!$tracks.length) return null;
-
-    ScrollTrigger.refresh();
-
-    const defaultSpeed = 0.5;
-    let dir = 1;
-
-    $tracks.forEach(($track) => {
-        let speed = defaultSpeed;
-        let tickerTm = null;
-        let tickedEnabled = false;
-
-        const removeTicker = (fn) => {
-            if (!tickedEnabled) return;
-            tickedEnabled = false;
-
-            clearInterval(tickerTm);
-        };
-
-        const addTicker = (fn) => {
-            if (tickedEnabled) return;
-            tickedEnabled = true;
-
-            clearInterval(tickerTm);
-            tickerTm = setInterval(() => {
-                window.requestAnimationFrame(() => {
-                    fn();
+            function buildTickers(config, originals) {
+                let tickers;
+                if (originals && originals.clones) { // on window resizes, we should delete the old clones and reset the widths
+                    originals.clones.forEach(el => el && el.parentNode && el.parentNode.removeChild(el));
+                    originals.forEach((el, i) => originals.inlineWidths[i] ? (el.style.width = originals.inlineWidths[i]) : el.style.removeProperty("width"));
+                    tickers = originals;
+                } else {
+                    tickers = config.targets;
+                }
+                const clones = tickers.clones = [],
+                    inlineWidths = tickers.inlineWidths = [];
+                tickers.forEach((el, index) => {
+                    inlineWidths[index] = el.style.width;
+                    el.style.width = "10000px"; // to let the children grow as much as necessary (otherwise it'll often be cropped to the viewport width)
+                    el.children[0].style.display = "inline-flex";
+                    let width = el.children[0].offsetWidth,
+                        cloneCount = Math.ceil(window.innerWidth / width),
+                        right = el.dataset.direction === "right",
+                        i;
+                    el.style.width = width * (cloneCount + 1) + "rem";
+                    for (i = 0; i < cloneCount; i++) {
+                        clones.push(config.clone(el));
+                    }
+                    gsap.fromTo(el, {
+                        x: right ? -width : 0
+                    }, {
+                        x: right ? 0 : -width,
+                        duration: width / 100 / parseFloat(el.dataset.speed || 1),
+                        repeat: -1,
+                        overwrite: "auto",
+                        ease: "none"
+                    });
                 });
-            }, 1000 / 120);
-        };
-
-        let $slides = $track.querySelectorAll(slideSelector);
-        let slideLength = Math.floor($slides[0].offsetHeight);
-        let defaultOffset = slideLength;
-        console.log($slides);
-
-        let draggable;
-        if ($slides.length <= 2) return;
-
-
-        let offset = defaultOffset;
-
-        const ticker = (val = 0) => {
-            if (offset >= 0) {
-                offset = -slideLength - speed;
-            } else if (offset <= -slideLength * 2) {
-                offset = -slideLength - speed;
-            } else {
-                offset -= val || speed * dir;
+                // rerun on window resizes, otherwise there could be gaps if the user makes the window bigger.
+                originals || window.addEventListener("resize", () => buildTickers(config, tickers));
             }
-
-            gsap.set($track, { y: offset });
-        };
-
-        const handleDrag = () => {
-            const { deltaY } = draggable[0];
-            ticker(-deltaY);
-            if (-deltaY < 0) {
-                dir = -1;
-            } else {
-                dir = 1;
-            }
-        };
-
-        const handleWheel = (e) => {
-            if (e.target.closest(trackSelector)) {
-                e.preventDefault();
-            }
-        };
-
-        const matchMedia = gsap.matchMedia();
-
-        matchMedia.add('(min-width: 768px)', () => {
-            slideLength = Math.floor($slides[0].clientHeight);
-            defaultOffset = slideLength;
-            Observer.create({
-                target: $track,
-                type: 'wheel, pointer',
-                onPress: (e) => {
-                    removeTicker(ticker);
-                },
-                onRelease: (e) => {
-                    addTicker(ticker);
-                },
-                onUp: (e) => {
-                    if (e.event.type === 'wheel') {
-                        removeTicker();
-                        ticker(-e.deltaY / 2);
-                        dir = 1;
-                        addTicker(ticker);
-                    }
-                },
-                onDown: (e) => {
-                    if (e.event.type === 'wheel') {
-                        removeTicker();
-                        ticker(-e.deltaY / 2);
-                        dir = -1;
-                        addTicker(ticker);
-                    }
-                },
-            });
-
-            draggable = Draggable.create($track.parentElement, {
-                onDragStart: () => {
-                    removeTicker(ticker);
-                },
-                onDragEnd: () => {
-                    addTicker(ticker);
-                },
-            });
-            if (draggable) draggable[0]?.addEventListener('drag', handleDrag);
-            window.addEventListener('wheel', handleWheel, { passive: false });
-            addTicker(ticker);
-        });
-
-        matchMedia.add('(max-width: 767px)', () => {
-            window.removeEventListener('wheel', handleWheel, { passive: false });
-            if (draggable) draggable[0]?.removeEventListener('drag', handleDrag);
-            removeTicker(ticker);
-        });
+        }
     });
 
-    return null;
+    gsap.effects.ticker(".ticker");
 };
 
-export default marqueeAnimation;
+export default sectionTicker;
+

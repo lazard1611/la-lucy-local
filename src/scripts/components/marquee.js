@@ -1,74 +1,135 @@
-import gsap from "gsap";
+import gsap from 'gsap';
+import Observer from 'gsap/Observer';
+import Draggable from 'gsap/dist/Draggable';
+// import InertiaPlugin from 'gsap/dist/InertiaPlugin';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import { isTouchDevice } from '../utils/utils';
+import { BREAKPOINTS } from '../utils/constants';
 
-const marquee = () => {
-    const SELECTORS = {
-        lists: '.js-ticker-list',
-        items: '.js-ticker-item',
-    }
+gsap.registerPlugin(ScrollTrigger, Observer, Draggable);
 
-    const $lists = document.querySelectorAll(SELECTORS.lists);
-    if (!$lists.length) return;
+export const marqueeAnimation = ({ trackSelector, slideSelector } = {}) => {
+    const $tracks = document.querySelectorAll(trackSelector);
+    if (!$tracks.length) return null;
 
-    const createClone = (list, items, itemClones) => {
-        items.forEach(($item) => {
-            const clone = $item.cloneNode(true);
-            itemClones.push(clone);
-        });
+    ScrollTrigger.refresh();
 
-        itemClones.forEach((clone) => {
-            list.insertBefore(clone, items[0]);
-        });
-    }
+    const defaultSpeed = 0.5;
+    let dir = 1;
 
-    const updateListStyleOffset = (list, startPosition, translate) => {
-        list.style.transform = `translateX(${-startPosition + translate}px)`;
-    }
+    $tracks.forEach(($track) => {
+        let speed = defaultSpeed;
+        let tickerTm = null;
+        let tickedEnabled = false;
 
-    $lists.forEach(($list) => {
-        const $items = $list.querySelectorAll(SELECTORS.items);
-        if (!$items.length) return;
-        const dataSpeed = parseInt($list.getAttribute('data-speed'));
-        const dataDirection = $list.getAttribute('data-direction');
-        const speed = dataSpeed ? dataSpeed : 1;
+        const removeTicker = (fn) => {
+            if (!tickedEnabled) return;
+            tickedEnabled = false;
 
-        let itemClones = [];
-        let directionValue = 1;
+            clearInterval(tickerTm);
+        };
 
-        if (dataDirection == 'right') {
-            directionValue = -1;
-        }
+        const addTicker = (fn) => {
+            if (tickedEnabled) return;
+            tickedEnabled = true;
 
-        const listWidth = $list.getBoundingClientRect().width;
+            clearInterval(tickerTm);
+            tickerTm = setInterval(() => {
+                window.requestAnimationFrame(() => {
+                    fn();
+                });
+            }, 1000 / 120);
+        };
 
-        const transformList = () => {
-            let windowWidth = window.innerWidth;
+        let $slides = $track.querySelectorAll(slideSelector);
+        let slideLength = Math.floor($slides[0].offsetHeight);
+        let defaultOffset = slideLength;
+        let draggable;
 
-            if (listWidth < windowWidth) {
-                const countDuplicate = Math.floor(windowWidth / listWidth) + 2;
+        if ($slides.length <= 2) return;
 
-                for (let i = 0; i < countDuplicate; i++) {
-                    createClone($list, $items, itemClones);
-                }
+        let offset = defaultOffset;
+
+        const ticker = (val = 0) => {
+            if (offset >= 0) {
+                offset = -slideLength - speed;
+            } else if (offset <= -slideLength * 2) {
+                offset = -slideLength - speed;
             } else {
-                createClone($list, $items, itemClones);
+                offset -= val || speed * dir;
             }
 
-            gsap.to($list, {
-                duration: speed,
-                ease: "none",
-                repeat: -1,
-                onUpdate: function() {
-                    const progress = this.progress();
-                    const currentOffset = Math.floor((listWidth) * progress);
-                    updateListStyleOffset($list, listWidth, currentOffset*directionValue)
-                }
+            gsap.set($track, { x: offset });
+        };
+
+        const handleDrag = () => {
+            const { deltaY } = draggable[0];
+            ticker(-deltaY);
+            if (-deltaY < 0) {
+                dir = -1;
+            } else {
+                dir = 1;
+            }
+        };
+
+        const handleWheel = (e) => {
+            if (e.target.closest(trackSelector)) {
+                e.preventDefault();
+            }
+        };
+
+        const matchMedia = gsap.matchMedia();
+
+        matchMedia.add(`(min-width: ${BREAKPOINTS.mediaPoint1 - 1}px)`, () => {
+            slideLength = Math.floor($slides[0].clientHeight);
+            defaultOffset = slideLength;
+            Observer.create({
+                target: $track,
+                type: 'wheel, pointer',
+                onPress: (e) => {
+                    removeTicker(ticker);
+                },
+                onRelease: (e) => {
+                    addTicker(ticker);
+                },
+                onUp: (e) => {
+                    if (e.event.type === 'wheel') {
+                        removeTicker();
+                        ticker(-e.deltaY / 2);
+                        dir = 1;
+                        addTicker(ticker);
+                    }
+                },
+                onDown: (e) => {
+                    if (e.event.type === 'wheel') {
+                        removeTicker();
+                        ticker(-e.deltaY / 2);
+                        dir = -1;
+                        addTicker(ticker);
+                    }
+                },
             });
-        }
 
-        transformList();
-
-        window.addEventListener('resize', transformList);
+            draggable = Draggable.create($track.parentElement, {
+                onDragStart: () => {
+                    removeTicker(ticker);
+                },
+                onDragEnd: () => {
+                    addTicker(ticker);
+                },
+            });
+            if (draggable) draggable[0]?.addEventListener('drag', handleDrag);
+            window.addEventListener('wheel', handleWheel, { passive: false });
+            addTicker(ticker);
+        });
+        matchMedia.add(`(max-width: ${BREAKPOINTS.mediaPoint1 - 1}px)`, () => {
+            window.removeEventListener('wheel', handleWheel, { passive: false });
+            if (draggable) draggable[0]?.removeEventListener('drag', handleDrag);
+            removeTicker(ticker);
+        });
     });
+
+    return null;
 };
 
-export default marquee;
+export default marqueeAnimation;

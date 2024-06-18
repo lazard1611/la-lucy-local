@@ -12,20 +12,20 @@
 /* ===================================================== COMMON ==================================================== */
 
 html {
-	font-size: 10px;
+	font-size: 16px;
 
-	@include bp($desktopXL, min) {
-		font-size: calc(100vw / 1920 * 10);
-		// font-size: 0.37vw;
-	}
-
-	@include bp($desktopXL - 1, $laptop) {
-		font-size: calc(100vw / 1920 * 10);
-	}
-
-	@include bp($mobile - 1) {
-		font-size: calc(100vw / 375 * 10);
-	}
+	//@include bp($desktopXL, min) {
+	//	font-size: calc(100vw / 1920 * 10);
+	//	// font-size: 0.37vw;
+	//}
+	//
+	//@include bp($desktopXL - 1, $laptop) {
+	//	font-size: calc(100vw / 1920 * 10);
+	//}
+	//
+	//@include bp($mobile - 1) {
+	//	font-size: calc(100vw / 375 * 10);
+	//}
 }
 
 body {
@@ -94,7 +94,6 @@ ul {
 	overflow: hidden;
 
 	padding-top: var(--height-header);
-
 }
 
 .section {
